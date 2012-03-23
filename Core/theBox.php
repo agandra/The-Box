@@ -21,7 +21,7 @@
 class theBox {
 	
 	protected $debug = 2;
-	protected $controller = '';
+	protected $controller = '_index';
 	protected $action = '';
 	
 	public function setDebug($debug) {
@@ -38,15 +38,33 @@ class theBox {
 	}
 
 	public function _setRoute() {
-		$path = $_SERVER['REQUEST_URI'];
-		$params = explode('/', $path);
+		$path = false;
+		$params = false;
+		
+		// This needs work, so it can work on more servers and more fallbacks
+		if(isset($_SERVER['argv'][0])) {
+			$path = $_SERVER['argv'][0];
+		}
+		elseif(isset($_ENV['argv'][0])) {
+			$path = $_ENV['argv'][0];
+		}
+		
+		if($path) {
+			$params = explode('/', $path);
+		}
 		
 		if(!is_array($params)) {
-			$this->controller = 'index';
+			$this->controller = '_index';
+		}
+		else {
+			$this->controller = $params[1];
+			if($params[2]) {
+				$this->action = $params[2];
+			}
 		}
 	}
 	
-	public function boostrap() {
+	public function bootstrap() {
 		$this->_setRoute();
 	}
 }
