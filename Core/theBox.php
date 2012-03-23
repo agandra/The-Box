@@ -45,11 +45,15 @@ class theBox {
 		if(isset($_SERVER['argv'][0])) {
 			$path = $_SERVER['argv'][0];
 		}
+		elseif(isset($_SERVER['REQUEST_URI']) && isset($_SERVER['PHP_SELF'])) {
+			$uri = str_replace("/index.php", "", $_SERVER['PHP_SELF']);
+			$path = str_replace($uri, "", $_SERVER['REQUEST_URI']);
+		}
 		elseif(isset($_ENV['argv'][0])) {
 			$path = $_ENV['argv'][0];
 		}
 		
-		if($path) {
+		if($path != '/') {
 			$params = explode('/', $path);
 		}
 		
@@ -62,8 +66,14 @@ class theBox {
 				$this->action = $params[2];
 			}
 		}
+		
+		$this->_validateRoute();
 	}
 	
+	public function _validateRoute() {
+		var_dump($this->controller);
+		var_dump($this->action);
+	}
 	public function bootstrap() {
 		$this->_setRoute();
 	}
