@@ -81,15 +81,27 @@ class theBox {
 	public function _validateRoute() {
 		
 	}
+	
 	public function bootstrap() {
 		$this->_setRoute();
 		
-		if($this->controller = '') {
-			if(!$home) {
+		if($this->controller == '') {
+			if(!$this->home) {
 				print 'Your home value in the core config file is set incorrectly';
 				exit(1);
 			}
-				
+			
+			$this->controller = $this->home['controller'];
+			$this->action = $this->home['action'];	
 		}
+
+		$class = ucwords(strtolower($this->controller)).'Controller';
+		
+		if(file_exists(ROOT . DS . 'Controllers' . DS . $class . '.php')) {
+			$class::test();
+		}
+		else
+			echo 'nah';
+
 	}
 }

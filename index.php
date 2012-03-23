@@ -28,18 +28,26 @@ function theBoxAutoLoad($class){
 	// If its not the base framework we then check if it is either an Object or a Library
 	elseif(stristr($class,'obj')) {
 		$class = substr($class, 5, length($class));
-		require_once ROOT . DS . 'Objects' . DS . $class . '.php';
+		require_once ROOT . DS . 'Objects' . DS . $class . 'Object.php';
 	}
 	elseif(stristr($class,'lib')) {
 		$class = substr($class, 5, length($class));
 		require_once ROOT . DS . 'Libraries' . DS . $class . '.php';
 	}
-	// Otherwise it must be a model
-	else {
-		require_once ROOT . DS . 'Models' . DS . $class . '.php';
-		// Initialize the model
+	elseif(stristr($class,'Controller')) {
+		require_once ROOT . DS . 'Controllers' . DS . $class . '.php';
+		// Initialize the controller
 		if(method_exists($class,'init'))
 			$class::init();
+	}
+	// Otherwise it must be a model or something we dont have to worry about
+	else {
+		if(file_exists(ROOT . DS . 'Models' . DS . $class . 'Model.php')) {
+			require_once ROOT . DS . 'Models' . DS . $class . 'Model.php';
+			// Initialize the model
+			if(method_exists($class,'init'))
+				$class::init();
+		}		
 	}
 }
 	

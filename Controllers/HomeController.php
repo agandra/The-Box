@@ -13,9 +13,14 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-// Set the DEBUG level (shouldnt use this and should use logging on production servers)
-// Set to 0 to turn off
-$theBox->setDebug(2);
-
-// The homepage controller and action it should go to.  Do not change this structure, just change the values of home and index
-$theBox->setHome(array('controller'=>'home', 'action'=>'index'));
+class HomeController extends BoxController {
+	
+	public static function test() {
+		echo 'testing';
+	}
+	
+	public static function init() {
+		echo 'init';
+	}
+	
+}
