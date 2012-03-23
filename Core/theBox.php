@@ -21,15 +21,17 @@
 class theBox {
 	
 	protected $debug = 2;
-	protected $controller = '_index';
+	protected $controller = '';
 	protected $action = '';
+	protected $home = false;
 	
 	public function setDebug($debug) {
 		if(is_int($debug)) {
 			$this->debug = $debug;
 		}
 		else {
-			return false;
+			print 'Your debug value in the core config file is set incorrectly';
+			exit(1);
 		}
 	}
 	
@@ -37,6 +39,11 @@ class theBox {
 		return $this->debug;
 	}
 
+	public function setHome($home) {
+		if(is_array($home) && $home['controller'] && $home['action']) {
+			$this->home = $home;
+		}
+	}
 	public function _setRoute() {
 		$path = false;
 		$params = false;
@@ -46,35 +53,43 @@ class theBox {
 			$path = $_SERVER['argv'][0];
 		}
 		elseif(isset($_SERVER['REQUEST_URI']) && isset($_SERVER['PHP_SELF'])) {
-			$uri = str_replace("/index.php", "", $_SERVER['PHP_SELF']);
-			$path = str_replace($uri, "", $_SERVER['REQUEST_URI']);
+			$uri = str_replace('/index.php', '', $_SERVER['PHP_SELF']);
+			$path = str_replace($uri, '', $_SERVER['REQUEST_URI']);
 		}
 		elseif(isset($_ENV['argv'][0])) {
 			$path = $_ENV['argv'][0];
 		}
 		
-		if($path != '/') {
+		if($path && ($path != '/')) {
 			$params = explode('/', $path);
 		}
 		
 		if(!is_array($params)) {
-			$this->controller = '_index';
+			$this->controller = '';
 		}
 		else {
 			$this->controller = $params[1];
 			if($params[2]) {
 				$this->action = $params[2];
 			}
-		}
-		
+		}		
 		$this->_validateRoute();
 	}
 	
+	// This makes sure that controller and action are within the expected values (prevent users going to restricted areas)
+	// Will 404 users if these values are not valid
 	public function _validateRoute() {
-		var_dump($this->controller);
-		var_dump($this->action);
+		
 	}
 	public function bootstrap() {
 		$this->_setRoute();
+		
+		if($this->controller = '') {
+			if(!$home) {
+				print 'Your home value in the core config file is set incorrectly';
+				exit(1);
+			}
+				
+		}
 	}
 }
