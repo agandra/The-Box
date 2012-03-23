@@ -70,6 +70,7 @@ class theBox {
 		
 		if($path && ($path != '/')) {
 			$params = explode('/', $path);
+			$params = $this->_cleanRoute($params);
 		}
 		
 		if(!is_array($params)) {
@@ -84,6 +85,20 @@ class theBox {
 		$this->_validateRoute();
 	}
 	
+	public function _cleanRoute($params) {
+		foreach($params as &$route) {
+			if(stristr($route, '?')) {
+				$real_value = explode('?',$route);
+				$route = $real_value[0];
+			}
+			if(stristr($route, '&')) {
+				$real_value = explode('&',$route);
+				$route = $real_value[0];
+			}
+		}
+		
+		return $params;
+	}
 	// This makes sure that controller and action are within the expected values (prevent users going to restricted areas)
 	// Will 404 users if these values are not valid
 	public function _validateRoute() {
@@ -107,6 +122,9 @@ class theBox {
 		
 		if(file_exists(ROOT . DS . 'Controllers' . DS . $class . '.php')) {
 			$action = $this->action;
+			if($action === '') {
+				$action = 'index';
+			}	
 			if(method_exists($class,$action)) {
 				$class::$action();
 			}
@@ -121,6 +139,6 @@ class theBox {
 	}
 	
 	public function send404() {
-		
+		echo '404ing hard';
 	}
 }
