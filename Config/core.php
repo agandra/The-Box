@@ -19,3 +19,6 @@ $theBox->setDebug(2);
 
 // The homepage controller and action it should go to.  Do not change this structure, just change the values of home and index
 $theBox->setHome(array('controller'=>'home', 'action'=>'index'));
+
+// If your app will use a database or not
+$theBox->useDatabase(true);

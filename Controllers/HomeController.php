@@ -15,7 +15,7 @@
 
 class HomeController extends BoxController {
 	
-	public static function test() {
+	public static function index() {
 		echo 'testing';
 	}
 	

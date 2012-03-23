@@ -24,6 +24,7 @@ class theBox {
 	protected $controller = '';
 	protected $action = '';
 	protected $home = false;
+	protected $database = true;
 	
 	public function setDebug($debug) {
 		if(is_int($debug)) {
@@ -44,6 +45,13 @@ class theBox {
 			$this->home = $home;
 		}
 	}
+	
+	public function useDatabase($database) {
+		if(!$database) {
+			$this->database = false;
+		}
+	}
+	
 	public function _setRoute() {
 		$path = false;
 		$params = false;
@@ -98,10 +106,21 @@ class theBox {
 		$class = ucwords(strtolower($this->controller)).'Controller';
 		
 		if(file_exists(ROOT . DS . 'Controllers' . DS . $class . '.php')) {
-			$class::test();
+			$action = $this->action;
+			if(method_exists($class,$action)) {
+				$class::$action();
+			}
+			else {
+				$this->send404();
+			}
 		}
-		else
-			echo 'nah';
+		else {
+			$this->send404();
+		}
 
+	}
+	
+	public function send404() {
+		
 	}
 }
