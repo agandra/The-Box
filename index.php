@@ -13,9 +13,6 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-// Remove this and make error part of thebox framework
-error_reporting(E_ALL);
-
 define('ROOT', dirname(__FILE__));
 define('DS', DIRECTORY_SEPARATOR);
 define('VIEW', 'View');
@@ -48,7 +45,18 @@ function theBoxAutoLoad($class){
 	
 spl_autoload_register('theBoxAutoLoad');
 
+// Create an instance of the class needed to run the framework.  We should never create another instance of this class
 $theBox = new theBox();
 
-$theBox->init();
+// Load the base configuration file
+require_once ROOT . DS . 'Config' . DS . 'core.php';
 
+if($theBox->getDebug()) {
+	error_reporting(E_ALL);
+}
+else {
+	error_reporting(0);
+}
+
+// And let the routing magic begin (loading the appropriate Controller)
+$theBox->bootstrap();
