@@ -15,8 +15,8 @@
 
 class ErrorController extends BoxController {
 	
-	public static function 404() {
-		echo '404ing hard';
+	public static function error_404() {
+		
 	}
 	
 }

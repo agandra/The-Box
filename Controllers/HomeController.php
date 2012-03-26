@@ -17,10 +17,11 @@ class HomeController extends BoxController {
 	
 	public static function index() {
 		// self::setCompile(false);
+		// self::setLayout('Test');
 	}
 	
 	public static function init() {
-		echo 'init';
+		
 	}
 	
 }

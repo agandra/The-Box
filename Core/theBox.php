@@ -106,6 +106,7 @@ class theBox {
 		
 		return $params;
 	}
+	
 	public function goHome() {
 		if(!$this->home) {
 			print 'Your home value in the core config file is set incorrectly';
@@ -115,6 +116,7 @@ class theBox {
 		$this->controller = $this->home['controller'];
 		$this->action = $this->home['action'];
 	}
+	
 	// This makes sure that controller and action are within the expected values (prevent users going to restricted areas)
 	// Will set values to 404 if not set correctly
 	public function _validateRoute() {
@@ -127,7 +129,6 @@ class theBox {
 		}
 		
 		$this->controller = ucwords(strtolower($this->controller));
-		$this->action = ucwords(strtolower($this->action));
 		$class = $this->controller.'Controller';
 		
 		if(file_exists(ROOT . DS . 'Controllers' . DS . $class . '.php')) {
@@ -160,25 +161,31 @@ class theBox {
 		}
 		
 		if($class::compile() === true) {
-			$this->compileView();
+			$this->compileView($class::getLayout());
 		}	
 	}
 	
-	public function compileView() {
+	public function compileView($layout) {
 		if(!$this->templateHandler) {
 			print 'Template Handler not set up properly';
 			exit(1);
 		}
+		
+		if(!$layout) {
+			$layout = 'Default';
+		}
+		
+		$layout_dir = 'Global/'.$layout.'/';
 		echo(
-			$this->templateHandler->fetch('Global/Default/header.tpl') .
-			$this->templateHandler->fetch($this->controller.'/'.$this->action.'.tpl').
-			$this->templateHandler->fetch('Global/Default/footer.tpl')
+			$this->templateHandler->fetch($layout_dir.'header.tpl') .
+			$this->templateHandler->fetch($this->controller.'/'.$this->action.'.tpl') .
+			$this->templateHandler->fetch($layout_dir.'footer.tpl')
 			);
 	}
 	
 	public function setError($action) {
 		$this->controller = 'Error';
-		$this->action = $action;
+		$this->action = 'error_'.$action;
 	}
 
 }

@@ -16,6 +16,7 @@
 abstract class BoxController {
 	
 	protected static $compile = true;
+	protected static $layout = false;
 	
 	public static function setCompile($compile) {
 		self::$compile = $compile;
@@ -23,5 +24,13 @@ abstract class BoxController {
 	
 	public static function compile() {
 		return self::$compile;
+	}
+	
+	public static function setLayout($layout) {
+		self::$layout = $layout;
+	}
+	
+	public static function getLayout() {
+		return self::$layout;
 	}
 }

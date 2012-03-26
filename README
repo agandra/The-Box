@@ -8,4 +8,8 @@ Notes when using:
 
 Controller names must be one word with the first letter uppercase.  Error controller is a default controller used by the app.  You also cannot name a controller 'Global', 'Compile'.  Controller names must also only contain characters and no numbers.
 
-Action names can be alphanumeric.  Case should not matter.  The default action for a controller is index.
+The Error Controller is an important base controller of The Box framework.  Every method name in that file should start with 'error_'. Even though most error pages will be static we dedicated a controller for this for extra flexibility if needed.  You can also add in extra tracking for custom errors in your controller file.
+
+Action names can be alphanumeric and contain underscores.  Case should not matter.  Actions can also not begin with numbers.  The default action for a controller is index.
+
+Templates follow a simple structure.  Global contains the footer and header for each file.  You can turn off templating with self::setTemplate(false); in your action code.  
