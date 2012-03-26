@@ -25,6 +25,11 @@ class theBox {
 	protected $action = '';
 	protected $home = false;
 	protected $database = true;
+	protected $templateHander = false;
+	
+	public function setTemplateHandler($handler) {
+		$this->templateHandler = $handler;
+	}
 	
 	public function setDebug($debug) {
 		if(is_int($debug)) {
@@ -121,7 +126,9 @@ class theBox {
 			// Set controller and action to 404 if isnt proper inputs
 		}
 		
-		$class = ucwords(strtolower($this->controller)).'Controller';
+		$this->controller = ucwords(strtolower($this->controller));
+		$this->action = ucwords(strtolower($this->action));
+		$class = $this->controller.'Controller';
 		
 		if(file_exists(ROOT . DS . 'Controllers' . DS . $class . '.php')) {
 			if($this->action === '') {
@@ -139,7 +146,7 @@ class theBox {
 	public function bootstrap() {
 		$this->_setRoute();
 
-		$class = ucwords(strtolower($this->controller)).'Controller';
+		$class = $this->controller.'Controller';
 		$action = $this->action;
 
 		// Double check just incase error handling wasnt set up properly - this is last fail check we kill app otherwise
@@ -158,7 +165,15 @@ class theBox {
 	}
 	
 	public function compileView() {
-		echo 'yeah i complied fsho';
+		if(!$this->templateHandler) {
+			print 'Template Handler not set up properly';
+			exit(1);
+		}
+		echo(
+			$this->templateHandler->fetch('Global/Default/header.tpl') .
+			$this->templateHandler->fetch($this->controller.'/'.$this->action.'.tpl').
+			$this->templateHandler->fetch('Global/Default/footer.tpl')
+			);
 	}
 	
 	public function setError($action) {

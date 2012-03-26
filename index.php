@@ -63,6 +63,7 @@ $smarty->setCacheDir(ROOT . DS . 'Cache/Smarty');
 // Create an instance of the class needed to run the framework.  We should never create another instance of this class
 // Maybe make this a static class later?
 $theBox = new theBox();
+$theBox->setTemplateHandler($smarty);
 
 // Load the base configuration file
 require_once ROOT . DS . 'Config' . DS . 'core.php';
