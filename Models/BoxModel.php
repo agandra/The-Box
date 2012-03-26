@@ -13,17 +13,6 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-class HomeController extends BoxController {
-	
-	public static function index() {
-		// self::setCompile(false);
-		// self::setLayout('Test');
-		
-		echo Home::test();
-	}
-	
-	public static function init() {
-		
-	}
+abstract class BoxModel {
 	
 }

@@ -38,9 +38,15 @@ function theBoxAutoLoad($class){
 	}
 	// Otherwise it must be a model or something we dont have to worry about (such as a third party library)
 	else {
-		if(file_exists(ROOT . DS . 'Models' . DS . $class . 'Model.php')) {
-			require_once ROOT . DS . 'Models' . DS . $class . 'Model.php';
+		$class_name = $class;
+		if(!stristr($class,'Model')) {
+			$class_name = ucwords($class).'Model';
+		}
+
+		if(file_exists(ROOT . DS . 'Models' . DS . $class_name . '.php')) {
+			require_once ROOT . DS . 'Models' . DS . $class_name . '.php';
 			// Initialize the model
+			class_alias($class_name,$class);	
 			if(method_exists($class,'init'))
 				$class::init();
 		}		
