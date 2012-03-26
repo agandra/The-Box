@@ -63,6 +63,8 @@ $smarty->setCacheDir(ROOT . DS . 'Cache/Smarty');
 // Create an instance of the class needed to run the framework.  We should never create another instance of this class
 // Maybe make this a static class later?
 $theBox = new theBox();
+// We are using smarty as our template handler but theoretically you could set this to 
+// your own, method naming would need to be the same as Smarty
 $theBox->setTemplateHandler($smarty);
 
 // Load the base configuration file
