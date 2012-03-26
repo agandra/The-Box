@@ -25,14 +25,10 @@ function theBoxAutoLoad($class){
 	if($class == 'thebox') {
 		require_once ROOT . DS . 'Core' . DS . 'theBox.php'; 
 	}
-	// If its not the base framework we then check if it is either an Object or a Library
+	// If its not the base framework we then check if it is an Object
 	elseif(stristr($class,'obj')) {
 		$class = substr($class, 5, length($class));
 		require_once ROOT . DS . 'Objects' . DS . $class . 'Object.php';
-	}
-	elseif(stristr($class,'lib')) {
-		$class = substr($class, 5, length($class));
-		require_once ROOT . DS . 'Libraries' . DS . $class . '.php';
 	}
 	elseif(stristr($class,'Controller')) {
 		require_once ROOT . DS . 'Controllers' . DS . $class . '.php';
@@ -40,7 +36,7 @@ function theBoxAutoLoad($class){
 		if(method_exists($class,'init'))
 			$class::init();
 	}
-	// Otherwise it must be a model or something we dont have to worry about
+	// Otherwise it must be a model or something we dont have to worry about (such as a third party library)
 	else {
 		if(file_exists(ROOT . DS . 'Models' . DS . $class . 'Model.php')) {
 			require_once ROOT . DS . 'Models' . DS . $class . 'Model.php';
@@ -53,7 +49,19 @@ function theBoxAutoLoad($class){
 	
 spl_autoload_register('theBoxAutoLoad');
 
+
+// We need to include our third party libraries ourselves and then initialize them however we would want to
+// Using smarty to create a template structure
+require_once ROOT . DS . 'Libraries' . DS . 'Smarty/Smarty.class.php';
+$smarty = new Smarty;
+$smarty->setTemplateDir(ROOT . DS . 'Views');
+$smarty->setCompileDir(ROOT . DS . 'Views/Compile');
+$smarty->setConfigDir(ROOT . DS . 'Libraries/Smarty/Config');
+$smarty->setCacheDir(ROOT . DS . 'Cache/Smarty');
+
+
 // Create an instance of the class needed to run the framework.  We should never create another instance of this class
+// Maybe make this a static class later?
 $theBox = new theBox();
 
 // Load the base configuration file

@@ -78,11 +78,12 @@ class theBox {
 		}
 		else {
 			$this->controller = $params[1];
-			if($params[2]) {
+			if(isset($params[2])) {
 				$this->action = $params[2];
 			}
-		}		
-		$this->_validateRoute();
+		}
+		
+		$this->_validateRoute();		
 	}
 	
 	public function _cleanRoute($params) {
@@ -96,49 +97,73 @@ class theBox {
 				$route = $real_value[0];
 			}
 		}
+		unset($route);
 		
 		return $params;
 	}
+	public function goHome() {
+		if(!$this->home) {
+			print 'Your home value in the core config file is set incorrectly';
+			exit(1);
+		}
+
+		$this->controller = $this->home['controller'];
+		$this->action = $this->home['action'];
+	}
 	// This makes sure that controller and action are within the expected values (prevent users going to restricted areas)
-	// Will 404 users if these values are not valid
+	// Will set values to 404 if not set correctly
 	public function _validateRoute() {
+		if($this->controller === '') {
+			$this->goHome();	
+		}
+		else {
+			// Need to do pattern matching and other stuff here
+			// Set controller and action to 404 if isnt proper inputs
+		}
 		
+		$class = ucwords(strtolower($this->controller)).'Controller';
+		
+		if(file_exists(ROOT . DS . 'Controllers' . DS . $class . '.php')) {
+			if($this->action === '') {
+				$this->action = 'index';
+			}	
+			if(!method_exists($class,$this->action)) {
+				$this->setError('404');
+			}
+		}
+		else {
+			$this->setError('404');
+		}
 	}
 	
 	public function bootstrap() {
 		$this->_setRoute();
-		
-		if($this->controller == '') {
-			if(!$this->home) {
-				print 'Your home value in the core config file is set incorrectly';
-				exit(1);
-			}
-			
-			$this->controller = $this->home['controller'];
-			$this->action = $this->home['action'];	
-		}
 
 		$class = ucwords(strtolower($this->controller)).'Controller';
-		
-		if(file_exists(ROOT . DS . 'Controllers' . DS . $class . '.php')) {
-			$action = $this->action;
-			if($action === '') {
-				$action = 'index';
-			}	
-			if(method_exists($class,$action)) {
-				$class::$action();
-			}
-			else {
-				$this->send404();
-			}
+		$action = $this->action;
+
+		// Double check just incase error handling wasnt set up properly - this is last fail check we kill app otherwise
+		// This should never fail unless user deleted/changed ErrorController file
+		if(method_exists($class, $action)) {
+			$class::$action();
 		}
 		else {
-			$this->send404();
+			print 'Something went wrong please contact server administrator';
+			exit(1);
 		}
-
+		
+		if($class::compile() === true) {
+			$this->compileView();
+		}	
 	}
 	
-	public function send404() {
-		echo '404ing hard';
+	public function compileView() {
+		echo 'yeah i complied fsho';
 	}
+	
+	public function setError($action) {
+		$this->controller = 'Error';
+		$this->action = $action;
+	}
+
 }

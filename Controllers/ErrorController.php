@@ -13,15 +13,10 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-abstract class BoxController {
+class ErrorController extends BoxController {
 	
-	protected static $compile = true;
-	
-	public static function setCompile($compile) {
-		self::$compile = $compile;
+	public static function 404() {
+		echo '404ing hard';
 	}
 	
-	public static function compile() {
-		return self::$compile;
-	}
 }

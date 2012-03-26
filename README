@@ -3,3 +3,9 @@ The purpose of this framework is to provide a very simple and flexible system fo
 Note from Adi Gandra (Developer of The Box Framework) :
 
 I found my self writing the same code over and over again when starting projects.  When I switched over to a developed framework to avoid this like CakePHP, or CodeIgniter - I had a hard time doing things my way.  I had to work within their guidelines (which is good in a lot of cases), but it makes doing more complicated custom tasks harder.  Because you have to figure out how to write it within their vast amount of code.  So I wanted to create a very simple framework that I could use, and have it be very easy to customize and bend to any project I want to do.  The purpose of this is not to have all the features of the bigger PHP Frameworks, but to have something that will bend to your use.
+
+Notes when using:
+
+Controller names must be one word with the first letter uppercase.  Error controller is a default controller used by the app.  You also cannot name a controller 'Global', 'Compile'.  Controller names must also only contain characters and no numbers.
+
+Action names can be alphanumeric.  Case should not matter.  The default action for a controller is index.

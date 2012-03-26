@@ -16,7 +16,7 @@
 class HomeController extends BoxController {
 	
 	public static function index() {
-		echo 'testing';
+		// self::setCompile(false);
 	}
 	
 	public static function init() {
