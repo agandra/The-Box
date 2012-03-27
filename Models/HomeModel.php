@@ -16,7 +16,7 @@
 class HomeModel extends BoxModel {
 	
 	public static function test() {
-		return 'adsfadsf';
+		return 'test';
 	}
 	
 }

@@ -1,2 +1,3 @@
 /Views/Compile/*
 /Cache/Smarty/*
+*/.DS_Store
