@@ -19,7 +19,7 @@ class HomeController extends BoxController {
 		// self::setCompile(false);
 		// self::setLayout('Test');
 		
-		// echo Home::test();
+		Home::test();
 	}
 	
 	public static function init() {

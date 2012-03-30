@@ -15,17 +15,64 @@
 
 class Database {
 	
-	protected $DB = false;
+	protected static $DB = false;
+	protected static $temp = array();
+	protected static $i = 1;
 	
 	public static function init($settings) {
 		$host = $settings['host'];
 		$dbname = $settings['database'];
 		try {
-			$DB = new PDO("mysql:host=$host;dbname=$dbname",$settings['login'],$settings['password']);
+			self::$DB = new PDO("mysql:host=$host;dbname=$dbname",$settings['login'],$settings['password']);
 		}
 		catch(PDOException $e) {
 			self::_handleError($e);
 		}
+	}
+	
+	public static function setAttribute($attribute, $value) {
+		self::$DB->setAttribute($attribute, $value);
+	}
+	
+	public static function prepare($query) {
+		self::$temp[self::$i] = self::$DB->prepare($query);
+		$temp = new DBO_TEMP();
+		$temp->init(self::$i);
+		self::$i++;
+		
+		return $temp->returnSelf();
+	}
+	
+	public static function execute($place) {
+		try {
+			self::$temp[$place]->execute();
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+	}
+	
+	public static function qInsert($table, $data) {
+		$fields = implode(', ', array_keys($data));
+		$placeholders = implode(', ', array_map('self::_addcolon',array_keys($data)));
+		$query = 'INSERT INTO '.$table.' ('.$fields.') value ('.$placeholders.')';
+		
+		try{
+			$STH = self::$DB->prepare($query);
+			$STH->execute($data);
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+	}
+	
+	protected static function _addColon($string) {
+		$string = ':'.$string;
+		return $string;
+	}
+	// Close the DB connection
+	public static function close() {
+		self::$DB = null;
 	}
 	
 	// Handle all database errors however you want here
@@ -33,4 +80,22 @@ class Database {
 		echo $e->getMessage();
 	}
 	
+}
+
+class DBO_TEMP {
+	private $i = false;
+	
+	public function init($i) {
+		$this->i = $i;
+	}
+	
+	public function returnSelf() {
+		return $this;
+	}
+	
+	public function execute() {
+		if($this->i) {
+			Database::execute($this->i);
+		}
+	}
 }

@@ -13,6 +13,10 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-abstract class BoxModel {
+class BoxModel {
+	
+	public static function addInt($i) {
+		return self;
+	}
 	
 }

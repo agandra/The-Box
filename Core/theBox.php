@@ -24,7 +24,7 @@ class theBox {
 	protected $controller = '';
 	protected $action = '';
 	protected $home = false;
-	protected $database = true;
+	protected $database = false;
 	
 	public function setDebug($debug) {
 		if(is_int($debug)) {
@@ -47,9 +47,7 @@ class theBox {
 	}
 	
 	public function useDatabase($database) {
-		if(!$database) {
-			$this->database = false;
-		}
+		$this->database = $database;
 	}
 	
 	public function initDB() {

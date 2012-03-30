@@ -16,7 +16,8 @@
 class HomeModel extends BoxModel {
 	
 	public static function test() {
-		return 'test';
+		$asdf = Database::prepare('insert into test (name) value (:name)');
+		$asdf->execute();
 	}
 	
 }

@@ -52,8 +52,8 @@ function theBoxAutoLoad($class){
 		if(file_exists(ROOT . DS . 'Models' . DS . $class_name . '.php')) {
 			require_once ROOT . DS . 'Models' . DS . $class_name . '.php';
 			// Initialize the model
-			if(!$class_name === $class)
-				class_alias($class_name,$class);	
+			if(!($class_name === $class))
+				class_alias($class_name,ucwords($class));	
 			if(method_exists($class,'init'))
 				$class::init();
 		}		
@@ -79,15 +79,23 @@ View::init($smarty);
 // Maybe make this a static class later?
 $theBox = new theBox();
 
+// Load the base configuration file
+require_once ROOT . DS . 'Config' . DS . 'core.php';
+
 // Initialize the database if we use it
 if($theBox->initDB()) {
 	require_once ROOT . DS . 'Config' . DS . 'database.php';
 	$db_config = new DB_CONFIG();
-	Database::init($db_config->default);
+	$useThis = $theBox->initDB();
+	Database::init($db_config->$useThis);
+	
+	if($theBox->getDebug()) {
+		Database::setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+	else {
+		Database::setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+	}
 }
-
-// Load the base configuration file
-require_once ROOT . DS . 'Config' . DS . 'core.php';
 
 if($theBox->getDebug()) {
 	error_reporting(E_ALL);
@@ -98,3 +106,8 @@ else {
 
 // And let the routing magic begin (loading the appropriate Controller)
 $theBox->bootstrap();
+
+// And close DB if we used it
+if($theBox->initDB()) {
+	Database::close();
+}
