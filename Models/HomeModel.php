@@ -16,8 +16,11 @@
 class HomeModel extends BoxModel {
 	
 	public static function test() {
-		$asdf = Database::prepare('insert into test (name) value (:name)');
-		$asdf->execute();
+		$asdf = Database::query('SELECT * FROM testz');
+		
+		while($row = $asdf->fetch()) {
+			print_r($row);
+		}
 	}
 	
 }

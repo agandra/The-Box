@@ -15,8 +15,4 @@
 
 class BoxModel {
 	
-	public static function addInt($i) {
-		return self;
-	}
-	
 }

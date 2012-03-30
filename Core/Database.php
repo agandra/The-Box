@@ -34,8 +34,27 @@ class Database {
 		self::$DB->setAttribute($attribute, $value);
 	}
 	
+	
+	public function lastInsertId() {
+		$id = false;
+		try {
+			$id = self::$DB->lastInsertId();
+			return $id;
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+		
+	}
+	
 	public static function prepare($query) {
-		self::$temp[self::$i] = self::$DB->prepare($query);
+		try {
+			self::$temp[self::$i] = self::$DB->prepare($query);
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+		
 		$temp = new DBO_TEMP();
 		$temp->init(self::$i);
 		self::$i++;
@@ -43,9 +62,37 @@ class Database {
 		return $temp->returnSelf();
 	}
 	
-	public static function execute($place) {
+	public static function fetchAll($query) {
 		try {
-			self::$temp[$place]->execute();
+			$fetch = self::$DB->query($query);
+			return $fetch->fetchAll(PDO::FETCH_ASSOC);		
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+	}
+	
+	public static function query($query) {
+		try {
+			return self::$DB->query($query);		
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+	}
+	
+	public static function exec($query) {
+		try {
+			self::$DB->exec($qeuery);
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+	}
+	
+	public static function execute($place, $data) {
+		try {
+			return self::$temp[$place]->execute($data);
 		}
 		catch(PDOException $e) {
 			self::_handleError($e);
@@ -83,7 +130,7 @@ class Database {
 }
 
 class DBO_TEMP {
-	private $i = false;
+	public $i = false;
 	
 	public function init($i) {
 		$this->i = $i;
@@ -93,9 +140,9 @@ class DBO_TEMP {
 		return $this;
 	}
 	
-	public function execute() {
+	public function execute($data) {
 		if($this->i) {
-			Database::execute($this->i);
+			Database::execute($this->i, $data);
 		}
 	}
 }
