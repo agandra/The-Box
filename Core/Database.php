@@ -15,4 +15,22 @@
 
 class Database {
 	
+	protected $DB = false;
+	
+	public static function init($settings) {
+		$host = $settings['host'];
+		$dbname = $settings['database'];
+		try {
+			$DB = new PDO("mysql:host=$host;dbname=$dbname",$settings['login'],$settings['password']);
+		}
+		catch(PDOException $e) {
+			self::_handleError($e);
+		}
+	}
+	
+	// Handle all database errors however you want here
+	protected static function _handleError($e) {
+		echo $e->getMessage();
+	}
+	
 }

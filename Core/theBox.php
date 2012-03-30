@@ -52,6 +52,10 @@ class theBox {
 		}
 	}
 	
+	public function initDB() {
+		return $this->database;
+	}
+	
 	public function _setRoute() {
 		$path = false;
 		$params = false;

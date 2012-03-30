@@ -79,6 +79,13 @@ View::init($smarty);
 // Maybe make this a static class later?
 $theBox = new theBox();
 
+// Initialize the database if we use it
+if($theBox->initDB()) {
+	require_once ROOT . DS . 'Config' . DS . 'database.php';
+	$db_config = new DB_CONFIG();
+	Database::init($db_config->default);
+}
+
 // Load the base configuration file
 require_once ROOT . DS . 'Config' . DS . 'core.php';
 
