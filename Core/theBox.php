@@ -25,11 +25,6 @@ class theBox {
 	protected $action = '';
 	protected $home = false;
 	protected $database = true;
-	protected $templateHander = false;
-	
-	public function setTemplateHandler($handler) {
-		$this->templateHandler = $handler;
-	}
 	
 	public function setDebug($debug) {
 		if(is_int($debug)) {
@@ -161,27 +156,11 @@ class theBox {
 		}
 		
 		if($class::compile() === true) {
-			$this->compileView($class::getLayout());
+			View::compileView($class::getLayout(), $this->controller, $this->action);
 		}	
 	}
 	
-	public function compileView($layout) {
-		if(!$this->templateHandler) {
-			print 'Template Handler not set up properly';
-			exit(1);
-		}
-		
-		if(!$layout) {
-			$layout = 'Default';
-		}
-		
-		$layout_dir = 'Global/'.$layout.'/';
-		echo(
-			$this->templateHandler->fetch($layout_dir.'header.tpl') .
-			$this->templateHandler->fetch($this->controller.'/'.$this->action.'.tpl') .
-			$this->templateHandler->fetch($layout_dir.'footer.tpl')
-			);
-	}
+	
 	
 	public function setError($action) {
 		$this->controller = 'Error';

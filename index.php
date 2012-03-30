@@ -21,9 +21,15 @@ define('WEBROOT', ROOT . DS . VIEW . DS);
 function theBoxAutoLoad($class){
 	$class = strtolower($class);
 	
-	// First we check if the class is the base class needed to initialize the framework(theBox)
+	// First we check if the class is the base class needed to initialize the framework(theBox) or any of the other core classes
 	if($class == 'thebox') {
 		require_once ROOT . DS . 'Core' . DS . 'theBox.php'; 
+	}
+	elseif($class == 'view') {
+		require_once ROOT . DS . 'Core' . DS . 'View.php';
+	}
+	elseif($class == 'database') {
+		require_once ROOT . DS . 'Core' . DS . 'Database.php';
 	}
 	// If its not the base framework we then check if it is an Object
 	elseif(stristr($class,'obj')) {
@@ -65,14 +71,13 @@ $smarty->setTemplateDir(ROOT . DS . 'Views');
 $smarty->setCompileDir(ROOT . DS . 'Views/Compile');
 $smarty->setConfigDir(ROOT . DS . 'Libraries/Smarty/Config');
 $smarty->setCacheDir(ROOT . DS . 'Cache/Smarty');
-
+// We are using smarty as our template handler but theoretically you could set this to 
+// your own, method naming would need to be the same as Smarty
+View::init($smarty);
 
 // Create an instance of the class needed to run the framework.  We should never create another instance of this class.
 // Maybe make this a static class later?
 $theBox = new theBox();
-// We are using smarty as our template handler but theoretically you could set this to 
-// your own, method naming would need to be the same as Smarty
-$theBox->setTemplateHandler($smarty);
 
 // Load the base configuration file
 require_once ROOT . DS . 'Config' . DS . 'core.php';
