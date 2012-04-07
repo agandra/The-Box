@@ -16,15 +16,12 @@
 class Database {
 	
 	protected static $DB = false;
-	protected static $temp = array();
-	protected static $i = 1;
 	
 	public static function init($settings) {
 		$host = $settings['host'];
 		$dbname = $settings['database'];
 		try {
 			self::$DB = new PDO("mysql:host=$host;dbname=$dbname",$settings['login'],$settings['password']);
-			return new DBO_TEMP();
 		}
 		catch(PDOException $e) {
 			self::_handleError($e);
@@ -50,17 +47,13 @@ class Database {
 	
 	public static function prepare($query) {
 		try {
-			self::$temp[self::$i] = self::$DB->prepare($query);
+			$temp = new DBO_TEMP();
+			$temp->save(self::$DB->prepare($query));
+			return $temp;
 		}
 		catch(PDOException $e) {
 			self::_handleError($e);
 		}
-		
-		$temp = new DBO_TEMP();
-		$temp->init(self::$i);
-		self::$i++;
-		
-		return $temp->returnSelf();
 	}
 	
 	public static function fetchAll($query) {
@@ -91,6 +84,8 @@ class Database {
 		}
 	}
 	
+	/*
+	// Dont think we need this function anymore?
 	public static function execute($place, $data) {
 		try {
 			return self::$temp[$place]->execute($data);
@@ -99,6 +94,7 @@ class Database {
 			self::_handleError($e);
 		}
 	}
+	*/
 	
 	public static function qInsert($table, $data) {
 		$fields = implode(', ', array_keys($data));
@@ -134,17 +130,16 @@ class Database {
 class DBO_TEMP {
 	public $i = false;
 	
-	public function init($i) {
+	public function save($i) {
 		$this->i = $i;
 	}
 	
-	public function returnSelf() {
-		return $this;
-	}
-	
 	public function execute($data) {
-		if($this->i) {
-			Database::execute($this->i, $data);
+		try{
+			$this->i->execute($data);
+		}
+		catch(PDOException $e) {
+			Database::_handleError($e);
 		}
 	}
 }

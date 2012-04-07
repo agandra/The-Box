@@ -196,7 +196,22 @@ class theBox {
 			View::compileView($class::getLayout(), self::$controller, self::$action);
 		}	
 	}
-
+	
+	/**
+	* Use this to quickly load up a Controller/Action.
+	* If you use this, we assume you know what you are doing.
+	*/
+	public static function quickLoad($controller, $action, $render = true) {
+		$class = $controller.'Controller';
+		$class::$action();
+		
+		if($render) {
+			if($class::compile() === true) {
+				View::compileView($class::getLayout(), $controller, $action);
+			}
+		}	
+	}
+	
 	/**
 	* Set the controller and action as an error state
 	*/
