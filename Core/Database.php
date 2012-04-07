@@ -24,6 +24,7 @@ class Database {
 		$dbname = $settings['database'];
 		try {
 			self::$DB = new PDO("mysql:host=$host;dbname=$dbname",$settings['login'],$settings['password']);
+			return new DBO_TEMP();
 		}
 		catch(PDOException $e) {
 			self::_handleError($e);
@@ -123,6 +124,7 @@ class Database {
 	}
 	
 	// Handle all database errors however you want here
+	// Make sure your debug mode is set to what you want
 	protected static function _handleError($e) {
 		echo $e->getMessage();
 	}

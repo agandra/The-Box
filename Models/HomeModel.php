@@ -18,9 +18,12 @@ class HomeModel extends BoxModel {
 	public static function test() {
 		$asdf = Database::query('SELECT * FROM testz');
 		
-		while($row = $asdf->fetch()) {
-			print_r($row);
+		if($asdf) {
+			while($row = $asdf->fetch()) {
+				print_r($row);
+			}
 		}
+		
 	}
 	
 }

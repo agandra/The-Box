@@ -65,7 +65,7 @@ spl_autoload_register('theBoxAutoLoad');
 
 // We need to include our third party libraries ourselves and then initialize them however we would want to.
 // Using smarty to create a template structure
-require_once ROOT . DS . 'Libraries' . DS . 'Smarty/Smarty.class.php';
+theBox::load('Lib', 'Smarty/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->setTemplateDir(ROOT . DS . 'Views');
 $smarty->setCompileDir(ROOT . DS . 'Views/Compile');
@@ -75,21 +75,18 @@ $smarty->setCacheDir(ROOT . DS . 'Cache/Smarty');
 // your own, method naming would need to be the same as Smarty
 View::init($smarty);
 
-// Create an instance of the class needed to run the framework.  We should never create another instance of this class.
-// Maybe make this a static class later?
-$theBox = new theBox();
-
 // Load the base configuration file
 require_once ROOT . DS . 'Config' . DS . 'core.php';
 
+
 // Initialize the database if we use it
-if($theBox->initDB()) {
+if(theBox::initDB()) {
 	require_once ROOT . DS . 'Config' . DS . 'database.php';
 	$db_config = new DB_CONFIG();
-	$useThis = $theBox->initDB();
+	$useThis = theBox::initDB();
 	Database::init($db_config->$useThis);
 	
-	if($theBox->getDebug()) {
+	if(theBox::getDebug()) {
 		Database::setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 	else {
@@ -97,7 +94,7 @@ if($theBox->initDB()) {
 	}
 }
 
-if($theBox->getDebug()) {
+if(theBox::getDebug()) {
 	error_reporting(E_ALL);
 }
 else {
@@ -105,9 +102,9 @@ else {
 }
 
 // And let the routing magic begin (loading the appropriate Controller)
-$theBox->bootstrap();
+theBox::bootstrap();
 
 // And close DB if we used it
-if($theBox->initDB()) {
+if(theBox::initDB()) {
 	Database::close();
 }
