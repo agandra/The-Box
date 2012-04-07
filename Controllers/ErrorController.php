@@ -19,4 +19,8 @@ class ErrorController extends BoxController {
 		
 	}
 	
+	public static function error_missing_view() {
+		
+	}
+	
 }

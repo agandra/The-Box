@@ -26,4 +26,8 @@ class HomeController extends BoxController {
 		
 	}
 	
+	public static function ma() {
+		
+	}
+	
 }

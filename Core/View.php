@@ -31,10 +31,29 @@ class View {
 			$layout = 'Default';
 		}
 		
+		if(!file_exists(ROOT . DS . 'Views' . DS . $controller . DS . $action . '.tpl')) {
+			self::_fileMissing($layout);
+		}
 		$layout_dir = 'Global/'.$layout.'/';
 		echo(
 			self::$templateHandler->fetch($layout_dir.'header.tpl') .
 			self::$templateHandler->fetch($controller.'/'.$action.'.tpl') .
+			self::$templateHandler->fetch($layout_dir.'footer.tpl')
+			);
+	}
+	
+	public static function _fileMissing($layout) {
+		ErrorController::error_missing_view();
+		
+		if(!$layout) {
+			$layout = 'Default';
+		}
+		
+		$layout_dir = 'Global/'.$layout.'/';
+		
+		echo(
+			self::$templateHandler->fetch($layout_dir.'header.tpl') .
+			self::$templateHandler->fetch('Error/error_missing_view.tpl') .
 			self::$templateHandler->fetch($layout_dir.'footer.tpl')
 			);
 	}

@@ -92,7 +92,7 @@ class theBox {
 		
 		if($path && ($path != '/')) {
 			$params = explode('/', $path);
-			$params = $this->_cleanRoute($params);
+			$params = self::_cleanRoute($params);
 		}
 		
 		if(!is_array($params)) {
