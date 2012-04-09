@@ -77,7 +77,7 @@ class Database {
 	
 	public static function exec($query) {
 		try {
-			self::$DB->exec($qeuery);
+			return self::$DB->exec($qeuery);
 		}
 		catch(PDOException $e) {
 			self::_handleError($e);
@@ -103,7 +103,7 @@ class Database {
 		
 		try{
 			$STH = self::$DB->prepare($query);
-			$STH->execute($data);
+			return $STH->execute($data);
 		}
 		catch(PDOException $e) {
 			self::_handleError($e);

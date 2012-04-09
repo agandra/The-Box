@@ -58,6 +58,10 @@ class View {
 			);
 	}
 	
+	public static function render($file) {
+		echo self::$templateHandler->fetch($file);
+	}
+	
 	public static function assign($name, $value) {
 		self::$templateHandler->assign($name, $value);
 	}
